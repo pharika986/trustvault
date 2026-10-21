@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><title>TrustVault</title>
+<style>body{font-family:sans-serif;max-width:950px;margin:20px auto;padding:0 10px}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:6px;text-align:left}
+.error{color:#b00}.success{color:#080}</style></head><body>
+<h2>TrustVault</h2>
+{% if user.is_authenticated %}
+<p>{{ user.username }} ({{ user.role }}) | <a href="{% url 'index' %}">Documents</a>
+{% if user.role == 'owner' %} | <a href="{% url 'upload' %}">Upload</a>{% endif %}
+{% if user.role == 'admin' %} | <a href="{% url 'activity' %}">Activity</a>{% endif %}
+<form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button>Logout</button></form></p>
+{% endif %}
+{% for m in messages %}<p class="{{ m.tags }}">{{ m }}</p>{% endfor %}
+{% block content %}{% endblock %}
+</body></html>

@@ -1,0 +1,15 @@
+{% extends "vault/base.html" %}{% block content %}
+<h3>Activity</h3>
+<p><a href="?verify=1">Verify audit chain</a> {% if chain %}<b>{{ chain }}</b>{% endif %}</p>
+{% if flagged or heavy %}<h4>Worth noticing (last hour)</h4><ul>
+{% for f in flagged %}<li class="error">{{ f.username|default:"anonymous" }} from {{ f.ip }}: {{ f.n }} denied attempts</li>{% endfor %}
+{% for h in heavy %}<li class="error">{{ h.username }}: {{ h.n }} downloads</li>{% endfor %}</ul>{% endif %}
+<form method="get">
+<input name="user" placeholder="username"><input name="doc" placeholder="document id">
+<select name="action"><option value="">any action</option>
+<option>upload</option><option>download</option><option>edit</option><option>delete</option><option>grant</option><option>revoke</option><option>role_denied</option></select>
+<select name="result"><option value="">any result</option><option>allowed</option><option>denied</option></select>
+<button>Filter</button></form>
+<table><tr><th>Time</th><th>User</th><th>Action</th><th>Document</th><th>Result</th><th>Detail</th><th>IP</th></tr>
+{% for l in logs %}<tr><td>{{ l.time|date:"Y-m-d H:i:s" }}</td><td>{{ l.username }}</td><td>{{ l.action }}</td><td>{{ l.document_id|default_if_none:"" }}</td><td>{{ l.result }}</td><td>{{ l.detail }}</td><td>{{ l.ip }}</td></tr>{% endfor %}</table>
+{% endblock %}

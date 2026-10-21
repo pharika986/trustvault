@@ -1,0 +1,6 @@
+{% extends "vault/base.html" %}{% block content %}
+<h3>Upload</h3>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+<p><input type="file" name="file"></p><p><input name="category" placeholder="category"></p>
+<button>Upload</button></form>
+{% endblock %}

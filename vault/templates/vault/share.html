@@ -1,0 +1,11 @@
+{% extends "vault/base.html" %}{% block content %}
+<h3>Share: {{ doc.name }}</h3>
+<form method="post">{% csrf_token %}
+<input name="username" placeholder="username">
+<select name="level"><option value="read">read</option><option value="edit">edit</option></select>
+<button>Grant</button></form>
+<table><tr><th>User</th><th>Access</th><th></th></tr>
+{% for g in grants %}<tr><td>{{ g.user.username }}</td><td>{% if g.can_edit %}edit{% else %}read{% endif %}</td>
+<td><form method="post" action="{% url 'revoke' doc.id g.user_id %}">{% csrf_token %}<button>Revoke</button></form></td></tr>
+{% empty %}<tr><td colspan="3">Not shared with anyone</td></tr>{% endfor %}</table>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "vault/base.html" %}{% block content %}
+<h3>Edit</h3>
+<form method="post">{% csrf_token %}
+<p><input name="name" value="{{ doc.name }}"></p><p><input name="category" value="{{ doc.category }}"></p>
+<button>Save</button></form>
+{% endblock %}
