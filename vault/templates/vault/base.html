@@ -1,14 +1,72 @@
-<!doctype html><html><head><meta charset="utf-8"><title>TrustVault</title>
-<style>body{font-family:sans-serif;max-width:950px;margin:20px auto;padding:0 10px}
-table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:6px;text-align:left}
-.error{color:#b00}.success{color:#080}</style></head><body>
-<h2>TrustVault</h2>
-{% if user.is_authenticated %}
-<p>{{ user.username }} ({{ user.role }}) | <a href="{% url 'index' %}">Documents</a>
-{% if user.role == 'owner' %} | <a href="{% url 'upload' %}">Upload</a>{% endif %}
-{% if user.role == 'admin' %} | <a href="{% url 'activity' %}">Activity</a>{% endif %}
-<form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button>Logout</button></form></p>
-{% endif %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrustVault</title>
+<style>
+:root{--navy:#0f1f3d;--blue:#2563eb;--blue-dark:#1d4ed8;--bg:#f3f5f9;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--red:#dc2626;--green:#15803d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+.topbar{background:var(--navy);color:#fff;padding:0 24px}
+.topbar .inner{max-width:1050px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;min-height:60px}
+.brand{font-size:1.25rem;font-weight:700;letter-spacing:.3px}
+.brand span{color:#60a5fa}
+.nav{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nav a{color:#cbd5e1;text-decoration:none;font-size:.95rem}
+.nav a:hover{color:#fff}
+.who{color:#e2e8f0;font-size:.9rem}
+.badge{display:inline-block;background:#1e3a8a;color:#bfdbfe;border-radius:999px;padding:1px 10px;font-size:.75rem;margin-left:6px;text-transform:uppercase;letter-spacing:.5px}
+.nav form{display:inline;margin:0}
+.nav button{background:transparent;border:1px solid #475569;color:#e2e8f0;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.nav button:hover{background:#1e293b}
+main{max-width:1050px;margin:24px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(15,23,42,.06);overflow-x:auto}
+h3{margin:0 0 16px;font-size:1.3rem}
+h4{margin:20px 0 8px}
+table{border-collapse:collapse;width:100%;margin-top:14px;font-size:.93rem}
+th{background:#f8fafc;color:var(--muted);text-transform:uppercase;font-size:.72rem;letter-spacing:.6px;text-align:left;padding:10px 12px;border-bottom:2px solid var(--line)}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:hover td,table tr:hover td{background:#f8fafc}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+input,select{font:inherit;padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;margin:2px 4px 2px 0}
+input:focus,select:focus{outline:2px solid #93c5fd;border-color:var(--blue)}
+input[type=file]{padding:6px;background:#f8fafc}
+button{font:inherit;cursor:pointer;background:var(--blue);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-weight:600}
+button:hover{background:var(--blue-dark)}
+form[action*="/delete/"] button,form[action*="/revoke/"] button{background:#fff;color:var(--red);border:1px solid #fecaca;padding:4px 12px;font-weight:500}
+form[action*="/delete/"] button:hover,form[action*="/revoke/"] button:hover{background:#fef2f2}
+form p{margin:0 0 14px}
+form label{display:block;font-weight:600;margin-bottom:4px}
+form input[type=text],form input[type=password]{width:100%;max-width:360px}
+.helptext,ul.errorlist{color:var(--muted);font-size:.85rem}
+ul.errorlist{color:var(--red);padding-left:18px;margin:4px 0}
+p.error,p.success{padding:10px 14px;border-radius:8px;margin:0 0 16px}
+p.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+p.success{background:#f0fdf4;border:1px solid #bbf7d0;color:var(--green)}
+li.error{color:#991b1b}
+.foot{max-width:1050px;margin:0 auto 30px;padding:0 16px;color:var(--muted);font-size:.8rem;text-align:center}
+@media(max-width:600px){.card{padding:14px}.topbar{padding:0 12px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="inner">
+  <div class="brand">Trust<span>Vault</span></div>
+  {% if user.is_authenticated %}
+  <nav class="nav">
+    <a href="{% url 'index' %}">Documents</a>
+    {% if user.role == 'owner' %}<a href="{% url 'upload' %}">Upload</a>{% endif %}
+    {% if user.role == 'admin' %}<a href="{% url 'activity' %}">Activity</a>{% endif %}
+    <span class="who">{{ user.username }}<span class="badge">{{ user.role }}</span></span>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form>
+  </nav>
+  {% endif %}
+</div></header>
+<main><div class="card">
 {% for m in messages %}<p class="{{ m.tags }}">{{ m }}</p>{% endfor %}
 {% block content %}{% endblock %}
-</body></html>
+</div></main>
+<div class="foot">Secure document sharing with an audit trail</div>
+</body>
+</html>
