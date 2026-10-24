@@ -81,6 +81,8 @@ def validate_upload(f):
 
 @login_required
 def index(request):
+    if request.user.role == "admin":
+        return redirect("activity")
     docs = Document.objects.filter(is_deleted=False).filter(
         Q(owner=request.user) | Q(grants__user=request.user, grants__can_read=True)
     ).distinct()

@@ -55,9 +55,9 @@ li.error{color:#991b1b}
   <div class="brand">Trust<span>Vault</span></div>
   {% if user.is_authenticated %}
   <nav class="nav">
-    <a href="{% url 'index' %}">Documents</a>
+    {% if user.role != 'admin' %}<a href="{% url 'index' %}">Documents</a>{% endif %}
     {% if user.role == 'owner' %}<a href="{% url 'upload' %}">Upload</a>{% endif %}
-    {% if user.role == 'admin' %}<a href="{% url 'activity' %}">Activity</a>{% endif %}
+    {% if user.role == 'admin' %}<a href="{% url 'activity' %}">Activity</a><a href="/admin/">Users</a>{% endif %}
     <span class="who">{{ user.username }}<span class="badge">{{ user.role }}</span></span>
     <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form>
   </nav>

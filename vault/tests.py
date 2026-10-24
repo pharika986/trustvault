@@ -120,3 +120,8 @@ class VaultTests(TestCase):
         e.result = "allowed"
         with self.assertRaises(PermissionError):
             e.save()
+
+    def test_admin_is_sent_to_activity_page(self):
+        r = self.client_for(self.adm).get(reverse("index"))
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(r["Location"], reverse("activity"))
