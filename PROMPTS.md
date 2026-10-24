@@ -40,11 +40,19 @@ Claude recommended Python with Django. Its first answer was a step-by-step plan,
 - **What was wrong:** I pasted the start command next to Render's default text, giving `gunicorn app:appgunicorn config.wsgi`, which would not start. Claude spotted it in my screenshot.
 - **What I did:** replaced it with `gunicorn config.wsgi`. The deploy succeeded. (No code commit, because this was a setting on Render.)
 
-### Entry 5 - 22 Oct 2026 - Access control: Edit link shown to read-only viewers (NOT FIXED)
+### Entry 5 - 22 Oct 2026 - Access control: Edit link shown to read-only viewers (FIXED 24 Oct)
 - **Asked:** Claude for the document list page.
 - **Produced:** a template that shows the Edit link to everyone who can see a document.
-- **What was wrong:** on the live site, `viewer_demo` (read-only) sees an Edit link. The server correctly refuses it with 404, and the tests cover that, but the page offers an action that will fail.
-- **What I did:** nothing yet. The server-side check is correct, so this is a usability fault and not an access hole. It is listed as unfinished.
+- **What was wrong:** on the live site, `viewer_demo` (read-only) saw an Edit link. The server correctly refused it with 404 and the tests covered that, but the page offered an action that would fail. It was a usability fault, not an access hole.
+- **What I did:** on 24 Oct I asked Claude to fix it. The list view now works out `user_can_edit` for each document using `can_access(..., "edit")`, and the template shows the link only when it is true. A new test, `test_edit_link_only_shown_when_editing_is_allowed`, was added, which is why the suite went from 14 to 15 tests. I ran the tests (OK) and checked on the live site that `viewer_demo` no longer sees the link.
+- **Lesson:** the server check was right, but I only noticed the page mismatch by using the app as a viewer, not from the tests.
+
+### Entry 6 - 24 Oct 2026 - Deployment broke: `admin.py` edited twice
+- **Asked:** Claude to rename the Django admin heading to "TrustVault Admin" and hide the Groups section.
+- **Produced:** shell commands that appended code to `vault/admin.py`.
+- **What was wrong:** I ran the append twice, so `admin.site.unregister(Group)` ran twice. The second call crashed with `NotRegistered: The model Group is not registered`, and Render's build failed. The live site kept running the older version, which is why it still showed "Django administration" while my local copy showed the new heading.
+- **What I did:** rewrote `admin.py` as one clean file with a guard (`if admin.site.is_registered(Group):`) so a repeat cannot crash startup. I uploaded it to GitHub, Render redeployed (commit `219e23e`, Live), and the "TrustVault Admin" heading and admin landing page now show on the live site.
+- **Lesson:** appending to a file with `cat >>` is not safe to repeat. I now rewrite whole files and check Render's deploy log after each push.
 
 ## Context and instructions I reused
 - The assignment brief (security first: the server decides on every request, an audit trail that can't be quietly changed, access removal that works immediately).
