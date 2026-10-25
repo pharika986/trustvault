@@ -6,7 +6,7 @@ A Django web app. A document can be opened only by people the owner granted acce
 
 ## Live site (no setup needed)
 
-https://trustvault-pharika986.onrender.com
+https://trustvault-pharika986.onrender.com/accounts/login/
 
 Free hosting: it sleeps when idle, so the first page can take about a minute. Uploaded files and data reset on each redeploy; the demo accounts and two sample files are re-created automatically, and the audit log starts empty.
 
