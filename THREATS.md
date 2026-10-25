@@ -66,7 +66,7 @@ Core rule: the server decides on every request. `can_access(user, doc, action)` 
 - **Brute force on login:** there is no lockout or rate limit.
 - **Public demo passwords:** they are in the README. The live data is demo data only.
 - **Admin superuser:** `admin_demo` cannot open documents, but a superuser can reset another user's password in `/admin/` and then log in as them. This is a real hole in "admin cannot read content". A fix is to make the admin a staff user without password-reset rights.
-- **Edit link shown to read-only viewers:** the page offers it and the server refuses it with 404. A usability fault, not an access hole.
+- **Edit link shown to read-only viewers:** fixed on 24 Oct (see PROMPTS.md Entry 5).
 - **Sessions after deactivation:** no forced logout.
 - **No file recovery:** soft delete only; no restore screen, no versions, no external sharing, no retention policy.
 - **Free hosting:** uploaded files and the SQLite database are wiped on every redeploy; `seed` recreates the demo accounts and sample files.
