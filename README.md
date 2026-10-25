@@ -1,5 +1,7 @@
 # TrustVault - secure document sharing with an audit trail
 
+Demo video: https://drive.google.com/file/d/1iN1ty42WW-VCZ-cnTQZypC1InC9YC1Vm/view
+
 A Django web app. A document can be opened only by people the owner granted access to. Access can be taken back and it stops working on the very next request. Every action, including refused attempts, is written to an audit log chained with hashes, so changes to old rows can be detected.
 
 ## Live site (no setup needed)
